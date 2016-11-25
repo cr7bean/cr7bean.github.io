@@ -42,4 +42,335 @@
     
   </entry>
   
+  <entry>
+    <title>Data Structures and Algorithms Using Python 学习记录(1)</title>
+    <link href="http://yoursite.com/2016/04/08/Python%E9%93%BE%E8%A1%A8/"/>
+    <id>http://yoursite.com/2016/04/08/Python链表/</id>
+    <published>2016-04-08T09:20:12.000Z</published>
+    <updated>2016-04-09T06:45:19.000Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="Chapter-6：Linked-Structures-6-1-6-4"><a href="#Chapter-6：Linked-Structures-6-1-6-4" class="headerlink" title="Chapter 6：Linked Structures 6.1-6.4"></a>Chapter 6：Linked Structures 6.1-6.4</h3><h4 id="1-结点的定义"><a href="#1-结点的定义" class="headerlink" title="1 结点的定义"></a>1 结点的定义</h4><ul>
+<li>定义结点类,初始化中有 data 参数,初始化的时候就要直接赋值.next 属性要等到类的实例创建完之后,通过点语法赋值.</li>
+<li>一个结点类包含两个属性,数据部分（data）和结点部分（next）</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ListNodes</span><span class="params">(object)</span>:</span></div><div class="line">    </div><div class="line">    <span class="comment"># 在参数前加上 * 将多个参数放入元组中.</span></div><div class="line">    <span class="comment"># 加上 ** 将多个参数放入字典中</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, data)</span>:</span></div><div class="line">        self.data = data</div><div class="line">        self.next = <span class="keyword">None</span></div><div class="line">    name = <span class="string">''</span></div><div class="line">    </div><div class="line">    <span class="comment"># 私有方法</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__print</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">print</span> &#123;<span class="string">'node.name:'</span>: self.name,</div><div class="line">                <span class="string">'node.data:'</span>: self.data&#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">description</span><span class="params">(self)</span>:</span></div><div class="line">        self.__print()</div><div class="line">    <span class="comment"># 实例变量,在类内部使用,不能在外部直接访问(加横线是私有,不加外部也可以访问)</span></div><div class="line">    <span class="comment"># 单下划线开头的变量只有类对象和子类的对象可以访问</span></div><div class="line">    <span class="comment"># 双下划线开头的变量只有类对象自己能访问</span></div><div class="line">    member = <span class="number">1</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add_member</span><span class="params">(self)</span>:</span></div><div class="line">        self.member += <span class="number">1</span></div><div class="line"></div><div class="line">	<span class="comment"># 定义类的实例,初始赋值的话,就可以直接访问属性值.</span></div><div class="line">	<span class="comment"># python 可以多重继承</span></div></pre></td></tr></table></figure>
+<h4 id="2-结点的初始化"><a href="#2-结点的初始化" class="headerlink" title="2 结点的初始化"></a>2 结点的初始化</h4><ul>
+<li>结点的头指针和头结点</li>
+</ul>
+<ul>
+<li>头指针:链表中第一个结点的存储位置.整个链表的存取必须是从头指针开始进行的.之后的每一个结点都是上一个的后继指针指向的位置. 头指针是链表的必要元素</li>
+<li>为了方便操作,在单链表的第一个结点前附设一个结点,称为头结点.头结点的数据域可以不存储任何信息.</li>
+<li>书中用的 head 指的是头指针</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 新建3个结点</span></div><div class="line">a = ListNodes(<span class="number">1</span>)</div><div class="line">b = ListNodes(<span class="number">2</span>)</div><div class="line">c = ListNodes(<span class="number">12</span>)</div><div class="line"></div><div class="line"><span class="comment"># 保存类实例变量名,后续对结点进行操作时,方便查找</span></div><div class="line">a.name = <span class="string">'a'</span></div><div class="line">b.name = <span class="string">'b'</span></div><div class="line">c.name = <span class="string">'c'</span></div><div class="line"></div><div class="line">a.next = b</div><div class="line">b.next = c</div><div class="line"></div><div class="line"><span class="comment"># 判断类继承关系</span></div><div class="line"><span class="comment"># print issubclass(ListNodes, object)</span></div><div class="line"><span class="comment"># 判断类实例是否包含某个属性/类型</span></div><div class="line"><span class="comment"># print hasattr(a, 'data')</span></div><div class="line"><span class="comment"># print isinstance(a, ListNodes)</span></div></pre></td></tr></table></figure>
+<h4 id="3-结点的遍历（有序和无序类似）"><a href="#3-结点的遍历（有序和无序类似）" class="headerlink" title="3 结点的遍历（有序和无序类似）"></a>3 结点的遍历（有序和无序类似）</h4><ul>
+<li>结点的遍历 O(n) Traversing the Nodes</li>
+</ul>
+<ul>
+<li>每一次遍历是一个单独的过程</li>
+<li>对结点的各种操作时,参数要指定头结点,后续的查找也一样</li>
+<li>遍历的过程中,要指定一个临时结点来保存每次的新值,查找也类似</li>
+<li>用 while 判断反面情况比直接用 if-else 判断正面情况简洁,同时要判断结点非空</li>
+<li>后续的操作中，为了方便查看结果，都需要遍历，因此每次需要返回头指针</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">traversal</span><span class="params">(head)</span>:</span></div><div class="line">    curNode = head</div><div class="line">    <span class="keyword">while</span> curNode <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</div><div class="line">       <span class="comment"># print curNode.data</span></div><div class="line">        curNode.description()</div><div class="line">        curNode = curNode.next</div><div class="line">        </div><div class="line"><span class="comment"># 遍历查看结点</span></div><div class="line">traversal(a)</div><div class="line"><span class="comment"># 输出</span></div><div class="line">&#123;<span class="string">'node.name:'</span>: <span class="string">'a'</span>, <span class="string">'node.data:'</span>: <span class="number">1</span>&#125;</div><div class="line">&#123;<span class="string">'node.name:'</span>: <span class="string">'b'</span>, <span class="string">'node.data:'</span>: <span class="number">2</span>&#125;</div><div class="line">&#123;<span class="string">'node.name:'</span>: <span class="string">'c'</span>, <span class="string">'node.data:'</span>: <span class="number">12</span>&#125;</div></pre></td></tr></table></figure>
+<h4 id="4-插入新节点"><a href="#4-插入新节点" class="headerlink" title="4 插入新节点"></a>4 插入新节点</h4><h4 id="4-1-无序"><a href="#4-1-无序" class="headerlink" title="4.1 无序"></a>4.1 无序</h4><h5 id="头插法-Prepending-Nodes"><a href="#头插法-Prepending-Nodes" class="headerlink" title="头插法 Prepending Nodes"></a>头插法 Prepending Nodes</h5><ul>
+<li>指定新结点的 next 结点</li>
+<li>重置头结点</li>
+<li>原本的头结点是一个单独的结点,它的指针指向 a.也可以理解结点 a 就是第一个结点.</li>
+<li>插入、删除、查找节点，判定的时候，是用结点的数据域进行对比判定</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">prepending</span><span class="params">(head, item)</span>:</span></div><div class="line">    newNode = ListNodes(item)</div><div class="line">    newNode.name = <span class="string">'newNode'</span></div><div class="line">    newNode.next = head</div><div class="line">    head = newNode</div><div class="line">    <span class="keyword">return</span> head</div><div class="line"></div><div class="line"><span class="comment"># 插入新节点，数据域为0</span></div><div class="line">traversal(prepending(a, <span class="number">0</span>))</div><div class="line"><span class="comment"># 输出</span></div><div class="line">&#123;<span class="string">'node.name:'</span>: <span class="string">'newNode'</span>, <span class="string">'node.data:'</span>: <span class="number">0</span>&#125;</div><div class="line">&#123;<span class="string">'node.name:'</span>: <span class="string">'a'</span>, <span class="string">'node.data:'</span>: <span class="number">1</span>&#125;</div><div class="line">&#123;<span class="string">'node.name:'</span>: <span class="string">'b'</span>, <span class="string">'node.data:'</span>: <span class="number">2</span>&#125;</div><div class="line">&#123;<span class="string">'node.name:'</span>: <span class="string">'c'</span>, <span class="string">'node.data:'</span>: <span class="number">12</span>&#125;</div></pre></td></tr></table></figure>
+<h5 id="尾插法-Appending-Nodes"><a href="#尾插法-Appending-Nodes" class="headerlink" title="尾插法 Appending Nodes"></a>尾插法 Appending Nodes</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 要指定 head 和 tail 两个参数。结束之后要同时调整 head 和 tail 的位置</span></div><div class="line"><span class="comment"># head 头指针</span></div><div class="line"><span class="comment"># tail 尾指针</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">appendingNode</span><span class="params">(head, tail, item)</span>:</span></div><div class="line">    newNode = ListNodes(item)</div><div class="line">    newNode.name = <span class="string">'newNode'</span></div><div class="line">    <span class="keyword">if</span> head <span class="keyword">is</span> <span class="keyword">None</span>:</div><div class="line">        head = newNode</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        tail.next = newNode</div><div class="line">    tail = newNode</div><div class="line">    <span class="keyword">return</span> head</div><div class="line"></div><div class="line"><span class="comment"># 在尾结点 c 后插入新节点</span></div><div class="line">traversal(appendingNode(a, c, <span class="number">4</span>))</div><div class="line"><span class="comment"># 输出</span></div><div class="line">&#123;<span class="string">'node.name:'</span>: <span class="string">'a'</span>, <span class="string">'node.data:'</span>: <span class="number">1</span>&#125;</div><div class="line">&#123;<span class="string">'node.name:'</span>: <span class="string">'b'</span>, <span class="string">'node.data:'</span>: <span class="number">2</span>&#125;</div><div class="line">&#123;<span class="string">'node.name:'</span>: <span class="string">'c'</span>, <span class="string">'node.data:'</span>: <span class="number">12</span>&#125;</div><div class="line">&#123;<span class="string">'node.name:'</span>: <span class="string">'newNode'</span>, <span class="string">'node.data:'</span>: <span class="number">4</span>&#125;</div></pre></td></tr></table></figure>
+<h4 id="4-2-有序"><a href="#4-2-有序" class="headerlink" title="4.2 有序"></a>4.2 有序</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 1 在有序链表中插入元素Inserting Nodes</span></div><div class="line"><span class="comment"># 2 无序列表插入的时候比较简单,采用头插法或尾插法即可</span></div><div class="line"><span class="comment"># 3 插入结点的时候,要同时兼顾新节点的前后结点,所以要定义一个 preNode.还要考虑边界条件,即只有一个结点的情况</span></div><div class="line"><span class="comment"># 4 最后要重新调整头指针的位置（如果头指针位置发生变化的话）</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">insertingNode</span><span class="params">(head, item)</span>:</span></div><div class="line">    preNode = <span class="keyword">None</span></div><div class="line">    curNode = head</div><div class="line">    <span class="keyword">while</span> curNode <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span> <span class="keyword">and</span> item &gt; curNode.data:</div><div class="line">        preNode = curNode</div><div class="line">        curNode = curNode.next</div><div class="line">    newNode = ListNodes(item)</div><div class="line">    newNode.next = curNode</div><div class="line">    <span class="keyword">if</span> curNode <span class="keyword">is</span> head:</div><div class="line">        head = newNode</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        preNode.next = newNode</div><div class="line">    <span class="keyword">return</span> head</div><div class="line"><span class="comment"># 插入数据域为3的结点</span></div><div class="line">traversal(insertingNode(a, <span class="number">3</span>))</div><div class="line"><span class="comment"># 输出</span></div><div class="line">&#123;<span class="string">'node.name:'</span>: <span class="string">'a'</span>, <span class="string">'node.data:'</span>: <span class="number">1</span>&#125;</div><div class="line">&#123;<span class="string">'node.name:'</span>: <span class="string">'b'</span>, <span class="string">'node.data:'</span>: <span class="number">2</span>&#125;</div><div class="line">&#123;<span class="string">'node.name:'</span>: <span class="string">'newNode'</span>, <span class="string">'node.data:'</span>: <span class="number">3</span>&#125;</div><div class="line">&#123;<span class="string">'node.name:'</span>: <span class="string">'c'</span>, <span class="string">'node.data:'</span>: <span class="number">12</span>&#125;</div></pre></td></tr></table></figure>
+<h4 id="5-移除结点-有序和无序类似"><a href="#5-移除结点-有序和无序类似" class="headerlink" title="5 移除结点(有序和无序类似)"></a>5 移除结点(有序和无序类似)</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 移除结点 Removing Nodes</span></div><div class="line"><span class="comment"># 需求: 移除 b 结点</span></div><div class="line"><span class="comment"># 思路:先要找到目标结点的前结点,然后让前结点的 next 指向后结点</span></div><div class="line"><span class="comment"># head 这里指的是 头指针</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">removeNode</span><span class="params">(head, target)</span>:</span></div><div class="line">    preNode = <span class="keyword">None</span></div><div class="line">    curNode = head</div><div class="line">    <span class="keyword">while</span> curNode <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span> <span class="keyword">and</span> curNode.data != target:</div><div class="line">        preNode = curNode</div><div class="line">        curNode = curNode.next</div><div class="line">    <span class="keyword">if</span> curNode <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</div><div class="line">        <span class="comment"># 如果删除的是第一个结点,就要调整头指针的位置</span></div><div class="line">        <span class="keyword">if</span> curNode <span class="keyword">is</span> head:</div><div class="line">            head = curNode.next</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            preNode.next = curNode.next</div><div class="line">        <span class="keyword">return</span> head</div><div class="line">    </div><div class="line"><span class="comment"># 移除数据域为2的结点，即 b 结点</span></div><div class="line">traversal(removeNode(a, <span class="number">2</span>))</div><div class="line"><span class="comment"># 输出</span></div><div class="line">&#123;<span class="string">'node.name:'</span>: <span class="string">'a'</span>, <span class="string">'node.data:'</span>: <span class="number">1</span>&#125;</div><div class="line">&#123;<span class="string">'node.name:'</span>: <span class="string">'c'</span>, <span class="string">'node.data:'</span>: <span class="number">12</span>&#125;</div></pre></td></tr></table></figure>
+<h4 id="6-查找结点"><a href="#6-查找结点" class="headerlink" title="6 查找结点"></a>6 查找结点</h4><h5 id="6-1-无序链表"><a href="#6-1-无序链表" class="headerlink" title="6.1 无序链表"></a>6.1 无序链表</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 结点的查找 O(n) Searching for a Node</span></div><div class="line"><span class="comment"># 两个参数:头结点和目标结点的数据域</span></div><div class="line"><span class="comment"># 直接用 while</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">unorderedSearch</span><span class="params">(head, target)</span>:</span></div><div class="line">     curNode = head</div><div class="line">     <span class="keyword">while</span> curNode <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span> <span class="keyword">and</span> curNode.data != target:</div><div class="line">         curNode = curNode.next</div><div class="line">     <span class="keyword">return</span> curNode <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span></div><div class="line"><span class="comment"># 查找数据域为12的结点，即 c 结点。和数据为23的结点</span></div><div class="line"><span class="keyword">print</span> unorderedSearch(a, <span class="number">12</span>)</div><div class="line"><span class="keyword">print</span> unorderedSearch(a, <span class="number">23</span>)</div><div class="line"><span class="comment"># 输出</span></div><div class="line"><span class="keyword">True</span></div><div class="line"><span class="keyword">False</span></div></pre></td></tr></table></figure>
+<h5 id="6-2-有序链表"><a href="#6-2-有序链表" class="headerlink" title="6.2 有序链表"></a>6.2 有序链表</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 线性查找:可以利用排序的优势</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">sortedSearch</span><span class="params">(head, target)</span>:</span></div><div class="line">     curNode = head</div><div class="line">     <span class="keyword">while</span> curNode <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span> <span class="keyword">and</span> curNode.data &lt;= target:</div><div class="line">         <span class="keyword">if</span> curNode.data == target:</div><div class="line">             <span class="keyword">return</span> <span class="keyword">True</span></div><div class="line">         <span class="keyword">else</span>:</div><div class="line">             curNode = curNode.next</div><div class="line">     <span class="keyword">return</span> <span class="keyword">False</span></div><div class="line"><span class="comment"># 查找数据域为2的结点，</span></div><div class="line"><span class="keyword">print</span> sortedSearch(a, <span class="number">2</span>)</div><div class="line"><span class="comment"># 输出</span></div><div class="line"><span class="keyword">True</span></div></pre></td></tr></table></figure>
+<h4 id="7-利用链表来实现-Bag数据结构"><a href="#7-利用链表来实现-Bag数据结构" class="headerlink" title="7 利用链表来实现 Bag数据结构"></a>7 利用链表来实现 <code>Bag</code>数据结构</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 1 利用单链表来实现 Bag 数据结构</span></div><div class="line"><span class="comment"># 2 Bag 和 Set 类似,如果同一个 key 被多次加入,可以获取 key 在 Bag 中的个数. Objective-C 中的 NSCountedSet 就是 Bag</span></div><div class="line"><span class="comment"># 3 这里 head 指的是头指针</span></div><div class="line"></div><div class="line"><span class="comment"># 私有类创建链表</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">_BagListNode</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, item)</span>:</span></div><div class="line">        self.item = item</div><div class="line">        self.next = <span class="keyword">None</span></div><div class="line">        </div><div class="line"><span class="comment"># 迭代器</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">_BagIterator</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, listHead)</span>:</span></div><div class="line">        self._curNode = listHead</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__iter__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">next</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">if</span> self._curNode <span class="keyword">is</span> <span class="keyword">None</span>:</div><div class="line">            <span class="keyword">raise</span> StopIteration</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            item = self._curNode.item</div><div class="line">            self._curNode = self._curNode.next</div><div class="line">            <span class="keyword">return</span> item</div><div class="line"></div><div class="line"><span class="comment"># 创建 bag</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Bag</span>:</span></div><div class="line">    <span class="comment"># 新建空 bag</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self._head = <span class="keyword">None</span></div><div class="line">        self._size = <span class="number">0</span></div><div class="line"></div><div class="line">    <span class="comment"># bag 中元素的个数</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__len__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self._size</div><div class="line"></div><div class="line">    <span class="comment"># 检测某个元素是否在 bag 中</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__contains__</span><span class="params">(self, item)</span>:</span></div><div class="line">        curNodes = self._head</div><div class="line">        <span class="keyword">while</span> curNodes <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span> <span class="keyword">and</span> curNodes.item != item:</div><div class="line">            curNodes = curNodes.next</div><div class="line">        <span class="keyword">return</span> curNodes <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span></div><div class="line"></div><div class="line">    <span class="comment"># 添加新元素到 bag 中</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__add__</span><span class="params">(self, item)</span>:</span></div><div class="line">        newNodes = _BagListNode(item)</div><div class="line">        newNodes.next = self._head</div><div class="line">        self._head = newNodes</div><div class="line">        self._size += <span class="number">1</span></div><div class="line"></div><div class="line">    <span class="comment"># 移除元素</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">remove</span><span class="params">(self, item)</span>:</span></div><div class="line">        preNode = <span class="keyword">None</span></div><div class="line">        curNode = self._head</div><div class="line">        <span class="keyword">while</span> curNode <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span> <span class="keyword">and</span> curNode.item != item:</div><div class="line">            preNode = curNode</div><div class="line">            curNode = curNode.next</div><div class="line">        <span class="keyword">assert</span> curNode <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>, <span class="string">'The item must be in the bag'</span></div><div class="line">        self._size -= <span class="number">1</span></div><div class="line">        <span class="keyword">if</span> curNode <span class="keyword">is</span> self._head:</div><div class="line">            self._head = curNode.next</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            preNode.next = curNode.next</div><div class="line">    <span class="comment"># 迭代器</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__iter__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> _BagIterator(self._head)</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;Chapter-6：Linked-Structures-6-1-6-4&quot;&gt;&lt;a href=&quot;#Chapter-6：Linked-Structures-6-1-6-4&quot; class=&quot;headerlink&quot; title=&quot;Chapter 6：Linked Struc
+    
+    </summary>
+    
+      <category term="Python" scheme="http://yoursite.com/categories/Python/"/>
+    
+    
+      <category term="Python" scheme="http://yoursite.com/tags/Python/"/>
+    
+      <category term="数据结构" scheme="http://yoursite.com/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"/>
+    
+      <category term="链表" scheme="http://yoursite.com/tags/%E9%93%BE%E8%A1%A8/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>iOS正则表达式应用</title>
+    <link href="http://yoursite.com/2016/03/24/ios%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/"/>
+    <id>http://yoursite.com/2016/03/24/ios正则表达式/</id>
+    <published>2016-03-24T14:51:44.000Z</published>
+    <updated>2016-04-12T11:17:19.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>以前对字符串进行提取的时候都是用<code>stringByReplacingOccurrencesOfString: withString:</code>进行替换，后来发现用正则表达式更强大，就简单学习了下。</p>
+<h3 id="正则表达式简易教程"><a href="#正则表达式简易教程" class="headerlink" title="正则表达式简易教程"></a><a href="http://www.runoob.com/regexp/regexp-tutorial.html" target="_blank" rel="external">正则表达式简易教程</a></h3><h3 id="提取字符串中的数字。"><a href="#提取字符串中的数字。" class="headerlink" title="提取字符串中的数字。"></a>提取字符串中的数字。</h3><blockquote>
+<p>利用<code>NSRegularExpression</code>这个类将将正则表达式字符串转换成<code>Objective-C</code>中可以用的正则表达式，匹配的结果用<code>NSTextCheckingResult</code>来表示。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">案例：</div><div class="line">要求：查找字符串中的数字。@&quot;https://book.douban.com/subject/25862578/&quot;;</div><div class="line">*/</div><div class="line"></div><div class="line">/* 1 先写出匹配的正则表达式字符串。</div><div class="line">\d 表示匹配一个数字(0-9)。</div><div class="line">\d&#123;n&#125; 表示匹配一个 n 位数字</div><div class="line">\d&#123;n,&#125; 表示至少匹配 n 位</div><div class="line">\d&#123;n,m&#125; 表示至少 n 位，至多 m 位</div><div class="line">*/</div><div class="line">NSString *pattern = @&quot;\\d&#123;1,&#125;&quot;;</div><div class="line">//2 转化为`Objective-C`中的正则表达式</div><div class="line">NSRegularExpression *expression = [NSRegularExpression regularExpressionWithPattern: pattern options: NSRegularExpressionCaseInsensitive error: nil];</div><div class="line">// 3 如果确定了匹配结果只有一个</div><div class="line"> NSTextCheckingResult *result = [expression firstMatchInString: checkString options: 0 range: NSMakeRange(0, [checkString length])];</div><div class="line">NSRange range = result.range</div><div class="line">// 3 或者直接获取 range</div><div class="line">NSRange range = [expression rangeOfFirstMatchInString: checkString options: 0 range: NSMakeRange(0, checkString.length)];</div><div class="line">// 3 如果结果有多个.数组中的对象是  NSTextCheckingResult 实例</div><div class="line">NSArray *results = [expression matchesInString: checkString options: 0 range: NSMakeRange(0, checkString.length)];</div><div class="line">// 4 获取匹配的结果数</div><div class="line">NSUInteger num = [expression numberOfMatchesInString: checkString options: 0 range: NSMakeRange(0, [checkString length])];</div></pre></td></tr></table></figure>
+<h3 id="删除空白字符串"><a href="#删除空白字符串" class="headerlink" title="删除空白字符串"></a>删除空白字符串</h3><p>以前碰到字符串中有空格或换行符，去网上搜到的方法都是。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">// 案例：name 字符串中两边都有空格，中间还有换行符、制表符、空格符</div><div class="line">NSString *name = @&quot;  wang \n\t 123 &quot;;</div><div class="line">NSLog(@&quot;name: %@&quot;, name);</div><div class="line">NSLog(@&quot;result:%@&quot;, [name stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]);</div><div class="line">// 输出：只是去掉了字符串两边的空格和换行符，但是对于字符串内部的空格是没有办法去掉的，对于 tab 等其他空白符号都不能去除。</div><div class="line">name:   wang </div><div class="line">	 123 </div><div class="line">result:wang </div><div class="line">	 123</div></pre></td></tr></table></figure>
+<p>了解了正则表达式后，心想利用正则表达式应该也可以。去网上查了之后，果然可以。这些符号都属于非打印符号，也是正则表达式的一部分。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">查找空白字符正则表达式字符串.包括 \f(换页符)、\n(换行符)、\r(回车符)、\t(制表符)、\v(垂直制表符)</div><div class="line">*/</div><div class="line">NSString *pattern = @&quot;\\s&quot;;</div><div class="line">// 生成`Objective-C`中的正则表达式</div><div class="line">NSRegularExpression *expression = [NSRegularExpression regularExpressionWithPattern: pattern options: NSRegularExpressionCaseInsensitive error: nil];</div><div class="line">// 替换查找的空白字符为空</div><div class="line">NSString *result = [expression stringByReplacingMatchesInString: checkString options: 0 range: NSMakeRange(0, [checkString length]) withTemplate: @&quot;&quot;];</div><div class="line"></div><div class="line">// 现在用这种方法来对前面的字符串进行处理。输出如下.问题解决。</div><div class="line">name:   wang </div><div class="line">	 123 </div><div class="line">result:wang123</div></pre></td></tr></table></figure>
+<p>我把两种处理写成了通用的方法，如果你也遇到同样的问题，可以直接调用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">// 查找字符串中的数字</div><div class="line">- (NSInteger) regexFindNumberInString: (NSString *) checkString</div><div class="line"></div><div class="line">&#123;</div><div class="line">    NSString *pattern = @&quot;\\d&#123;1,&#125;&quot;;</div><div class="line">    NSRegularExpression *expression = [NSRegularExpression regularExpressionWithPattern: pattern</div><div class="line">      options: NSRegularExpressionCaseInsensitive error: nil];</div><div class="line">    NSRange range = [expression rangeOfFirstMatchInString: checkString</div><div class="line">                                                  options: 0</div><div class="line">                                                    range: NSMakeRange(0, checkString.length)];</div><div class="line">    return [[checkString substringWithRange: range] integerValue];</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 删除字符串中的所有空白符</div><div class="line">- (NSString *)regexDeleteBlankCharacterInString: (NSString *) checkString</div><div class="line">&#123;</div><div class="line">    NSString *pattern = @&quot;\\s&quot;;</div><div class="line">    NSRegularExpression *expression = [NSRegularExpression regularExpressionWithPattern: pattern options: NSRegularExpressionCaseInsensitive error: nil];</div><div class="line">    NSString *result = [expression stringByReplacingMatchesInString: checkString options: 0 range: NSMakeRange(0, [checkString length]) withTemplate: @&quot;&quot;];</div><div class="line">    return result;</div><div class="line">&#125;</div></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;以前对字符串进行提取的时候都是用&lt;code&gt;stringByReplacingOccurrencesOfString: withString:&lt;/code&gt;进行替换，后来发现用正则表达式更强大，就简单学习了下。&lt;/p&gt;
+&lt;h3 id=&quot;正则表达式简易教程&quot;&gt;&lt;a href=
+    
+    </summary>
+    
+      <category term="iOS" scheme="http://yoursite.com/categories/iOS/"/>
+    
+    
+      <category term="正则表达式" scheme="http://yoursite.com/tags/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/"/>
+    
+      <category term="Objective-C" scheme="http://yoursite.com/tags/Objective-C/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>2016 网易 iOS 开发笔试记录</title>
+    <link href="http://yoursite.com/2016/03/22/%E7%BD%91%E6%98%93iOS%E5%BC%80%E5%8F%91%E7%AC%94%E8%AF%95%E8%AE%B0%E5%BD%95/"/>
+    <id>http://yoursite.com/2016/03/22/网易iOS开发笔试记录/</id>
+    <published>2016-03-22T14:51:44.000Z</published>
+    <updated>2016-04-09T06:45:15.000Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="http://7xotel.com1.z0.glb.clouddn.com/%E5%8D%9A%E5%AE%A2%E5%86%B0%E5%A4%A9%E9%9B%AA%E5%9C%B0.jpeg" alt=""></p>
+<p>投的最早的网易终于今天晚上笔试，7点到9点。做题的过程中，发现了好多问题，赶紧记录下。</p>
+<h2 id="选择题"><a href="#选择题" class="headerlink" title="选择题"></a>选择题</h2><p>总共有24道题，单选10个，多选10个，问答题加编程题5个。</p>
+<p>选择题的考察范围特别广泛，数据结构、<code>Linux</code>、操作系统、数据库和 <code>iOS</code> 的一些知识。iOS 考察的有两道题，如果不仔细的话，很容易出错。</p>
+<h4 id="第一个是给定字符串，然后求字符串，问会不会报错，代码如下"><a href="#第一个是给定字符串，然后求字符串，问会不会报错，代码如下" class="headerlink" title="第一个是给定字符串，然后求字符串，问会不会报错，代码如下"></a>第一个是给定字符串，然后求字符串，问会不会报错，代码如下</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">NSString *name = @&quot;wang&quot;;</div><div class="line">[name substringFromIndex: 5];</div></pre></td></tr></table></figure>
+<p>结果肯定会报错，看一下官方文档的描述</p>
+<blockquote>
+<p>Returns a new string containing the characters of the receiver from the one at a given index to the end.</p>
+<p>An index. The value must lie within the bounds of the receiver, or be equal to the length of the receiver.</p>
+<p>Raises an NSRangeException if (anIndex - 1) lies beyond the end of the receiver.</p>
+<p>If anIndex is equal to the length of the string, returns an empty string.</p>
+</blockquote>
+<p>  <code>index</code>不能大于原字符串的长度。如果index等于字符串的长度，则返回的是空字符串。</p>
+<p>  截取字符串的时候，包含了 <code>index</code>所在的字符。</p>
+<p>  <code>substringToIndex:</code>对于 <code>index</code>的限制类似。只是不包含 <code>index</code>所在的字符。</p>
+<h4 id="第二个是字符串和可变字符串的问题，问输出的结果。"><a href="#第二个是字符串和可变字符串的问题，问输出的结果。" class="headerlink" title="第二个是字符串和可变字符串的问题，问输出的结果。"></a>第二个是字符串和可变字符串的问题，问输出的结果。</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">NSString *name = @&quot;wang&quot;;</div><div class="line">NSMutableString *title = [name copy];</div><div class="line">[title appendString: @&quot;li&quot;];</div><div class="line">NSLog(@&quot;%@&quot;, title);</div></pre></td></tr></table></figure>
+<p>这个结果是运行时报错。（当时做题的时候，扫了一眼就选错了）</p>
+<p>因为<code>Objective-C</code>的动态机制，<code>[name copy]</code>，赋值给<code>title</code>后，<code>title</code>实质是不可变字符串。给不可变字符串发送<code>appendString:</code>消息，编译的时候不会去检查变量类型，运行的时候发现找不到该方法就会报错。</p>
+<h2 id="编程和简答题"><a href="#编程和简答题" class="headerlink" title="编程和简答题"></a>编程和简答题</h2><p>总共有5道题，前两道是编程题，后三道是简答题。总体来说，不算很难。不过要吐槽的是我用<code>Python</code>答题，定义了函数。运行的时候一直显示<code>def</code>为非法字符。当时真的哭笑不得。到交卷的时候还是这样。</p>
+<h4 id="编程题1"><a href="#编程题1" class="headerlink" title="编程题1"></a>编程题1</h4><blockquote>
+<p>给定字符串 addcfg ，找出其中第一个不重复的字符。并输出位置。如果找不到，输出-1</p>
+<p>举例1：aefaf，输出 1</p>
+<p>举例2：aadd，输出 2<br>思路：通过遍历把每一个字符先去掉，得到子字符串，然后再判断该字符是否在子字符串中。同时用<code>index</code>来标记最后的结果，默认为<code>-1</code><br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&gt; <span class="function"><span class="keyword">def</span> <span class="title">nearest</span><span class="params">(name)</span>:</span></div><div class="line">&gt; n = len(name)</div><div class="line">&gt; index = <span class="number">-1</span></div><div class="line">&gt; <span class="keyword">for</span> i <span class="keyword">in</span> xrange(n):</div><div class="line">&gt; temp_str = name[<span class="number">0</span>:i] + name[i+<span class="number">1</span>:n]</div><div class="line">&gt; <span class="keyword">if</span> name[i] <span class="keyword">not</span> <span class="keyword">in</span> temp_str:</div><div class="line">&gt; index = i</div><div class="line">&gt; <span class="keyword">break</span></div><div class="line">&gt; <span class="keyword">print</span> index</div><div class="line">&gt;</div></pre></td></tr></table></figure></p>
+</blockquote>
+<h4 id="编程题2"><a href="#编程题2" class="headerlink" title="编程题2"></a>编程题2</h4><blockquote>
+<p>判断版本数字的高低。比如<code>2.2.1.5</code>比<code>2.1.1.3</code>高</p>
+</blockquote>
+<p>思路：先以<code>.</code>为间隔把所有的数字存入<code>list</code>中，然后逐位比较就可以。这个在<code>Python</code>中用<code>str.splist</code>来分隔。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">higher_version</span><span class="params">(a, b)</span>:</span></div><div class="line">    list_a = str(a).split(<span class="string">'.'</span>)</div><div class="line">    list_b = str(b).split(<span class="string">'.'</span>)</div><div class="line">    n = len(list_a)</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> xrange(n):</div><div class="line">        <span class="keyword">if</span> list_a[i] &gt; list_b[i]:</div><div class="line">            <span class="keyword">print</span> a</div><div class="line">            <span class="keyword">break</span></div><div class="line">        <span class="keyword">elif</span> list_a[i] &lt; list_b[i]:</div><div class="line">            <span class="keyword">print</span> b</div><div class="line">            <span class="keyword">break</span></div></pre></td></tr></table></figure>
+<h4 id="简答题1"><a href="#简答题1" class="headerlink" title="简答题1"></a>简答题1</h4><blockquote>
+<p><code>Set</code>能否改变对象内容</p>
+</blockquote>
+<p>定义：<code>Set</code>是一个集合，集合就是一堆不重复值的组合。它是无序的。</p>
+<p>不能改变对象内容。</p>
+<p><code>Objective-C</code>中的<code>Set</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">NSSet: 静态集合</div><div class="line">NSMutableSet：动态集合，可以添加删除元素</div><div class="line">NSCountedSet: 继承于NSMutableSet，可以显示向集合里添加元素的总个数。</div><div class="line"></div><div class="line">NSArray *array = @[@&quot;a&quot;, @&quot;b&quot;, @&quot;a&quot;];</div><div class="line">NSCountedSet *set = [NSCountedSet setWithArray: array];</div><div class="line">NSLog(@&quot;%@&quot;, set);</div><div class="line">//输出结果</div><div class="line">&lt;NSCountedSet: 0x7fad53553e20&gt; (a [2], b [1])</div><div class="line">可以通过 </div><div class="line">- countForObject:</div><div class="line">来查看某个对象出现的次数。</div></pre></td></tr></table></figure>
+<h4 id="简答题2"><a href="#简答题2" class="headerlink" title="简答题2"></a>简答题2</h4><blockquote>
+<p>写出<code>UIViewController</code>的完整生命周期</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">- (void) loadView</div><div class="line">- (void) viewDidLoad</div><div class="line">- (void) viewWillLayoutSubviews</div><div class="line">- (void) viewDidLayoutSubviews</div><div class="line">- (void) viewWillAppear:</div><div class="line">- (void) viewDidAppear:</div><div class="line">- (void) viewWillDisappear:</div><div class="line">- (void) viewDidDisappear:</div></pre></td></tr></table></figure>
+<h4 id="简答题3"><a href="#简答题3" class="headerlink" title="简答题3"></a>简答题3</h4><blockquote>
+<p>给出了一段程序，让改错，详细的程序忘掉了，就说下要改的错误</p>
+</blockquote>
+<p>修改的几个地方</p>
+<ul>
+<li>向不可变集合中添加元素。应该用<code>NSMutableArray</code>和<code>NSMutableDictionary</code></li>
+<li>在<code>Block</code>中修改外部变量的值。应该在定义变量的时候，添加<code>__block</code></li>
+<li>还有个有关<code>Dispatch</code>同步、异步的错误，具体记不清楚了。</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>大公司的笔试题考的范围非常广泛，还要继续看更多的书。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;img src=&quot;http://7xotel.com1.z0.glb.clouddn.com/%E5%8D%9A%E5%AE%A2%E5%86%B0%E5%A4%A9%E9%9B%AA%E5%9C%B0.jpeg&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;投的最早的网易终于今天晚上
+    
+    </summary>
+    
+      <category term="生活记录" scheme="http://yoursite.com/categories/%E7%94%9F%E6%B4%BB%E8%AE%B0%E5%BD%95/"/>
+    
+    
+      <category term="实习" scheme="http://yoursite.com/tags/%E5%AE%9E%E4%B9%A0/"/>
+    
+      <category term="iOS" scheme="http://yoursite.com/tags/iOS/"/>
+    
+      <category term="网易" scheme="http://yoursite.com/tags/%E7%BD%91%E6%98%93/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Objective-C 内存管理学习记录</title>
+    <link href="http://yoursite.com/2016/03/20/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/"/>
+    <id>http://yoursite.com/2016/03/20/内存管理/</id>
+    <published>2016-03-20T12:23:12.000Z</published>
+    <updated>2016-04-09T06:39:39.000Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="内存管理的起源"><a href="#内存管理的起源" class="headerlink" title="内存管理的起源"></a>内存管理的起源</h3><p>1 <code>xcode 4.2</code>之前，需要手工引用计数，使用保留<code>retain</code>、释放<code>release</code>和自动释放<code>autorlease</code>.之后引入了自动引用计数。就是让编译器来进行内存管理。</p>
+<h3 id="内存管理中的对象操作"><a href="#内存管理中的对象操作" class="headerlink" title="内存管理中的对象操作"></a>内存管理中的对象操作</h3><p>1对象操作与<code>Objective-C</code>方法的对应</p>
+<ul>
+<li>生成并持有对象：<code>alloc,new,copy,mutablecopy</code>或是以这些关键字开头，采用驼峰命名法。</li>
+<li>持有对象：<code>retain</code></li>
+<li>释放对象：<code>release</code></li>
+<li>废弃对象：<code>dealloc</code></li>
+<li>采用<code>autorelease</code>会自动释放，但没有持有该对象，不能在发送<code>release</code>消息，除非先<code>retain</code></li>
+</ul>
+<h3 id="autorelease"><a href="#autorelease" class="headerlink" title="autorelease"></a><code>autorelease</code></h3><p>1 通过给对象发送<code>autorelease</code>消息，把对象添加到<code>autoreleasepool</code>维护的对象列表，它并不实际包含对象，而只是包含对象的引用。可以延迟释放对象的时间。通过给<code>autoreleasepool</code>发送<code>drain</code>消息，<code>autoreleasepool</code>就会被清理，对象会被释放。</p>
+<p>本质：调用<code>NSAutoreleasePool</code>对象的<code>addObject</code>类方法</p>
+<p>代码如下<code>MRC</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];</div><div class="line">id obj = [[NSObject alloc] init];</div><div class="line">[obj autorelease];</div><div class="line">[pool drain];//相当于[obj release]</div></pre></td></tr></table></figure>
+<h3 id="autoreleasepool"><a href="#autoreleasepool" class="headerlink" title="@autoreleasepool"></a>@autoreleasepool</h3><ul>
+<li><p><code>main</code>函数中指令定义了任何在这个上下文创建的对象都是自动释放（ARC 自动完成）</p>
+</li>
+<li><p>如果在程序中产生了大量临时的对象（循环），如果想创建多个自动释放池，代码如下</p>
+<p><code>ARC</code>时可以用下面的写法。</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">for (i =0; i&lt;n; ++i)&#123;</div><div class="line">	@autoreleasepool&#123;</div><div class="line">		//与临时对象打交道</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>ARC</code>与<code>MRC</code>编译的代码一起运行，只要 <code>MRC</code>代码与标准的<code>Cocoa</code>命名规则一致，都会运行良好。</p>
+<h3 id="所有权修饰符"><a href="#所有权修饰符" class="headerlink" title="所有权修饰符"></a>所有权修饰符</h3><p>1 <code>ARC</code>有效时，<code>id</code>类型和对象类型同<code>C</code>语言其他类型不同，其类型必须加上所有权修饰符，一共有四种。</p>
+<p>循环引用容易发生内存泄露，就是应当废弃的对象在超出其生存周期后继续存在。</p>
+<ul>
+<li>__strong` 默认类型，表示对对象的强引用，即在该变量被废弃时，会释放其被赋予的对象。不仅只在变量作用域中，在赋值上也能够正确地管理其对象的所有者。</li>
+<li><code>__weak</code>:表示不持有对象。还有一个优点就是在持有对象的弱引用时，弱该对象被废弃，则此弱引用自动失效且处于<code>nil</code>被赋值的状态。只能在 iOS5及以上使用。以前的系统用<code>__unsafe_unretained</code></li>
+<li><code>__unsafe_unretained</code>: 和<code>__weak</code>类似，只是引用对象被废弃时，可能会运行崩溃。</li>
+<li><code>__autoreleasing</code>在<code>ARC</code>下可以调用，在<code>@autoreleasepool</code>块中。作为返回值的时候，取得非自己生成并持有的对象。</li>
+</ul>
+<p>2 <code>dealloc</code>：无论<code>ARC</code>是否有效，只要对象的所有者不持有该对象，该对象就被废弃，都会调用<code>dealloc</code>方法。</p>
+<p><code>ARC</code>时的写法,只用来删除已经注册的对象或观察者对象时才会调用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">- (void) dealloc</div><div class="line">&#123;</div><div class="line">    [[NSNotificationCenter defaultCenter] removeObserver: self];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>MRC</code>时的写法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">- (void) dealloc</div><div class="line">&#123;</div><div class="line">    [super dealloc];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="属性修饰符"><a href="#属性修饰符" class="headerlink" title="属性修饰符"></a>属性修饰符</h3><p>1 属性是用于封装对象中的数据。<code>Objective-C</code>对象通常会把其所需要的数据保存为各种实例变量。使用点语法效果与直接调用存取方法相同</p>
+<p>2 <code>@dynamic</code>关键字告诉编译器不要自动创建属性所需要的实例变量，也不要为其创建存取方法。</p>
+<p>3 原子性：<code>nonatomic</code>和<code>atomic</code>,前者不使用同步锁。后者是默认的，会降低性能。</p>
+<p>4 读写权限：<code>readwrite</code>拥有<code>setter</code>和<code>getter</code>方法。<code>readonly</code>只拥有<code>getter</code>方法。可以把某种属性对外公开为只读属性，然后在该类的实现块或<code>.m</code>文件中的接口部分实现。</p>
+<h4 id="内存管理语义："><a href="#内存管理语义：" class="headerlink" title="内存管理语义："></a>内存管理语义：</h4><ul>
+<li><code>assign</code>: 只会针对如 NSInteger, CGFloat纯量类型简单赋值</li>
+</ul>
+<ul>
+<li><code>strong</code>：定义了一种拥有关系，为这种属性设置新值时，先保留新值，并释放旧值，然后再将新值设置上去。</li>
+<li><code>weak</code>: 设值方法不保留新值，也不释放旧值。与<code>assign</code>类似。但是属性所指的对象遭到摧毁时，属性值也会清空。  </li>
+<li><code>unsafe_unretained</code>: 与<code>assign</code>相同，但适用于对象类型。当对象遭到摧毁时，属性值不会清空。</li>
+<li><code>copy</code>:与<code>strong</code>类似。但是设置方法不保留新值，而是<code>copy</code>.当属性类型为<code>NSString</code>，用来保护其封装性。</li>
+</ul>
+<h3 id="所有权修饰符和属性修饰符之间的关系"><a href="#所有权修饰符和属性修饰符之间的关系" class="headerlink" title="所有权修饰符和属性修饰符之间的关系"></a>所有权修饰符和属性修饰符之间的关系</h3><table>
+<thead>
+<tr>
+<th>属性修饰符</th>
+<th>所有权修饰符</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>assign</code></td>
+<td><code>__unsafe_unretained</code></td>
+</tr>
+<tr>
+<td><code>copy</code></td>
+<td><code>__strong</code>赋值的是被赋值的对象</td>
+</tr>
+<tr>
+<td><code>retain</code></td>
+<td><code>__strong</code></td>
+</tr>
+<tr>
+<td><code>strong</code></td>
+<td><code>__strong</code></td>
+</tr>
+<tr>
+<td><code>unsafe_unretained</code></td>
+<td><code>__unsafe_unretained</code></td>
+</tr>
+<tr>
+<td>weak</td>
+<td><code>__weak</code></td>
+</tr>
+</tbody>
+</table>
+<p>​    </p>
+<h3 id="MRC下对属性修饰符对应的setter过程"><a href="#MRC下对属性修饰符对应的setter过程" class="headerlink" title="MRC下对属性修饰符对应的setter过程"></a><code>MRC</code>下对属性修饰符对应的<code>setter</code>过程</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">self.property = newValue;</div><div class="line"></div><div class="line">//assign</div><div class="line">property = newValue;</div><div class="line"></div><div class="line">//retain</div><div class="line">if(property != newValue)&#123;</div><div class="line">[property release];</div><div class="line">property = [newValue retain];</div><div class="line">&#125;</div><div class="line"></div><div class="line">//copy</div><div class="line">if(property != newValue)&#123;</div><div class="line">[property release];</div><div class="line">property = [newValue copy];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><ul>
+<li><p><code>Objective-C</code>高级编程</p>
+</li>
+<li><p><code>Effective Objective-C</code> 2.0 : 编写高质量iOS与OS X代码的52个有效方法</p>
+</li>
+<li><p><code>Objective-C</code> 程序设计（第4版）</p>
+<p>​</p>
+</li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;内存管理的起源&quot;&gt;&lt;a href=&quot;#内存管理的起源&quot; class=&quot;headerlink&quot; title=&quot;内存管理的起源&quot;&gt;&lt;/a&gt;内存管理的起源&lt;/h3&gt;&lt;p&gt;1 &lt;code&gt;xcode 4.2&lt;/code&gt;之前，需要手工引用计数，使用保留&lt;code&gt;reta
+    
+    </summary>
+    
+      <category term="iOS" scheme="http://yoursite.com/categories/iOS/"/>
+    
+    
+      <category term="iOS" scheme="http://yoursite.com/tags/iOS/"/>
+    
+      <category term="内存管理" scheme="http://yoursite.com/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>最近的生活</title>
+    <link href="http://yoursite.com/2016/03/01/hello/"/>
+    <id>http://yoursite.com/2016/03/01/hello/</id>
+    <published>2016-03-01T14:51:44.000Z</published>
+    <updated>2016-04-09T06:39:16.000Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="http://7xotel.com1.z0.glb.clouddn.com/%E5%8D%9A%E5%AE%A2%E5%A4%9A%E8%B7%AF%E7%81%AB%E8%BD%A6.jpeg" alt=""></p>
+<p>过完年到学校已经快一个月了，这段时间每天都很忙碌，感觉一天<code>24</code>个小时完全不够用，因为要做的事情太多，要学的知识也太多了。所以这些事情都是在并行处理。感觉有些乱，应该好好整理下，分清楚轻重缓急，并指定相应事件的目标。</p>
+<h2 id="实验室"><a href="#实验室" class="headerlink" title="实验室"></a>实验室</h2><p>上学期期末的时候，老师就催着做实验，后来因为实验用品暂时买不到我就推到了这学期。开学的时候，买了试剂做几次实验，效果还可以。现在白天就是优化代码、做实验采集更多的图片。<!-- *more* --> </p>
+<h2 id="找实习"><a href="#找实习" class="headerlink" title="找实习"></a>找实习</h2><p>从寒假的时候就开始准备数据结构和算法，可是3月份各大公司开始暑假实习招聘的时候，我才意识到准备的有些晚了。我的关注点都是在<code>iOS</code>开发，可是大公司的招聘对基础的知识看的都比较重，所以每天还在恶补数据结构和算法。操作系统、编译原理和计算机网络。</p>
+<p>最初看到的是网易的内推消息，可是需要内推码，找了好几个都不能用，后来在北邮人论坛找到了可以用的。听说网易的内推只是免除简历筛选，但是笔试还要继续。说是3月22号，继续等待中。在<code>V2ex</code>上看到的阿里和腾讯的内推消息。阿里投完之后快一周了，个人中心显示的还是新投递。腾讯的也一直没消息，晚上问了内推腾讯的师兄，发现简历没有录入。师兄帮录入了之后，就收到短信了，还要等待10天的简历评级。</p>
+<p>每次在网上看到别人都2，3面了。就想难道自己连简历都没有通过？后来想想，心态放平稳，现在应该做的是继续提高自己的实力。现在网上到处都是<code>iOS</code>开发，不过我想任何一个行业发展到最后都会是这样的。初级的占6成，中级的占3成，高级的占一成。</p>
+<ul>
+<li>白天6点到8点看计算机基础课程，晚上写代码。</li>
+<li>希望能进理想中的互联网公司。</li>
+</ul>
+<h2 id="微软创新杯"><a href="#微软创新杯" class="headerlink" title="微软创新杯"></a>微软创新杯</h2><p>3月底就要提交作品，我开发的<a href="https://github.com/cr7bean/ShaanxiProvinceLibrary" target="_blank" rel="external">陕西省图书馆 iOS 客户端</a>马上就要提交了，还在继续添加更多功能。因为比赛规定作品中必须要用到微软的相关技术。能用到的也只有利用<code>Windows Azure</code>中的移动推送功能。作品月底还要提交到<code>App Store</code>。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>忙碌的生活总是好的，起码你正在追求自己想要的东西，不会觉得空虚。</p>
+<p><a href="https://unsplash.com/" target="_blank" rel="external">首页图片来源</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;img src=&quot;http://7xotel.com1.z0.glb.clouddn.com/%E5%8D%9A%E5%AE%A2%E5%A4%9A%E8%B7%AF%E7%81%AB%E8%BD%A6.jpeg&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;p&gt;过完年到学校已经快一个月了
+    
+    </summary>
+    
+      <category term="生活记录" scheme="http://yoursite.com/categories/%E7%94%9F%E6%B4%BB%E8%AE%B0%E5%BD%95/"/>
+    
+    
+      <category term="感悟" scheme="http://yoursite.com/tags/%E6%84%9F%E6%82%9F/"/>
+    
+      <category term="实习" scheme="http://yoursite.com/tags/%E5%AE%9E%E4%B9%A0/"/>
+    
+  </entry>
+  
 </feed>

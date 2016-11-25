@@ -1,0 +1,94 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> Objective-C 内存管理学习记录 · Hexo</title><meta name="description" content="Objective-C 内存管理学习记录 - John Doe"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="short icon" href="/favicon.png"><link rel="stylesheet" href="/css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="http://yoursite.com/atom.xml" title="Hexo"></head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/favicon.png"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="http://weibo.com/sunchongsheng" target="_blank" class="nav-list-link">WEIBO</a></li><li class="nav-list-item"><a href="https://github.com/pinggod" target="_blank" class="nav-list-link">GITHUB</a></li><li class="nav-list-item"><a href="/atom.xml" target="_self" class="nav-list-link">RSS</a></li></ul></header><section class="container"><div class="post"><article class="post-block"><h1 class="post-title">Objective-C 内存管理学习记录</h1><div class="post-info">Mar 20, 2016</div><div class="post-content"><h3 id="内存管理的起源"><a href="#内存管理的起源" class="headerlink" title="内存管理的起源"></a>内存管理的起源</h3><p>1 <code>xcode 4.2</code>之前，需要手工引用计数，使用保留<code>retain</code>、释放<code>release</code>和自动释放<code>autorlease</code>.之后引入了自动引用计数。就是让编译器来进行内存管理。</p>
+<h3 id="内存管理中的对象操作"><a href="#内存管理中的对象操作" class="headerlink" title="内存管理中的对象操作"></a>内存管理中的对象操作</h3><p>1对象操作与<code>Objective-C</code>方法的对应</p>
+<ul>
+<li>生成并持有对象：<code>alloc,new,copy,mutablecopy</code>或是以这些关键字开头，采用驼峰命名法。</li>
+<li>持有对象：<code>retain</code></li>
+<li>释放对象：<code>release</code></li>
+<li>废弃对象：<code>dealloc</code></li>
+<li>采用<code>autorelease</code>会自动释放，但没有持有该对象，不能在发送<code>release</code>消息，除非先<code>retain</code></li>
+</ul>
+<h3 id="autorelease"><a href="#autorelease" class="headerlink" title="autorelease"></a><code>autorelease</code></h3><p>1 通过给对象发送<code>autorelease</code>消息，把对象添加到<code>autoreleasepool</code>维护的对象列表，它并不实际包含对象，而只是包含对象的引用。可以延迟释放对象的时间。通过给<code>autoreleasepool</code>发送<code>drain</code>消息，<code>autoreleasepool</code>就会被清理，对象会被释放。</p>
+<p>本质：调用<code>NSAutoreleasePool</code>对象的<code>addObject</code>类方法</p>
+<p>代码如下<code>MRC</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];</div><div class="line">id obj = [[NSObject alloc] init];</div><div class="line">[obj autorelease];</div><div class="line">[pool drain];//相当于[obj release]</div></pre></td></tr></table></figure>
+<h3 id="autoreleasepool"><a href="#autoreleasepool" class="headerlink" title="@autoreleasepool"></a>@autoreleasepool</h3><ul>
+<li><p><code>main</code>函数中指令定义了任何在这个上下文创建的对象都是自动释放（ARC 自动完成）</p>
+</li>
+<li><p>如果在程序中产生了大量临时的对象（循环），如果想创建多个自动释放池，代码如下</p>
+<p><code>ARC</code>时可以用下面的写法。</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">for (i =0; i&lt;n; ++i)&#123;</div><div class="line">	@autoreleasepool&#123;</div><div class="line">		//与临时对象打交道</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>ARC</code>与<code>MRC</code>编译的代码一起运行，只要 <code>MRC</code>代码与标准的<code>Cocoa</code>命名规则一致，都会运行良好。</p>
+<h3 id="所有权修饰符"><a href="#所有权修饰符" class="headerlink" title="所有权修饰符"></a>所有权修饰符</h3><p>1 <code>ARC</code>有效时，<code>id</code>类型和对象类型同<code>C</code>语言其他类型不同，其类型必须加上所有权修饰符，一共有四种。</p>
+<p>循环引用容易发生内存泄露，就是应当废弃的对象在超出其生存周期后继续存在。</p>
+<ul>
+<li>__strong` 默认类型，表示对对象的强引用，即在该变量被废弃时，会释放其被赋予的对象。不仅只在变量作用域中，在赋值上也能够正确地管理其对象的所有者。</li>
+<li><code>__weak</code>:表示不持有对象。还有一个优点就是在持有对象的弱引用时，弱该对象被废弃，则此弱引用自动失效且处于<code>nil</code>被赋值的状态。只能在 iOS5及以上使用。以前的系统用<code>__unsafe_unretained</code></li>
+<li><code>__unsafe_unretained</code>: 和<code>__weak</code>类似，只是引用对象被废弃时，可能会运行崩溃。</li>
+<li><code>__autoreleasing</code>在<code>ARC</code>下可以调用，在<code>@autoreleasepool</code>块中。作为返回值的时候，取得非自己生成并持有的对象。</li>
+</ul>
+<p>2 <code>dealloc</code>：无论<code>ARC</code>是否有效，只要对象的所有者不持有该对象，该对象就被废弃，都会调用<code>dealloc</code>方法。</p>
+<p><code>ARC</code>时的写法,只用来删除已经注册的对象或观察者对象时才会调用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">- (void) dealloc</div><div class="line">&#123;</div><div class="line">    [[NSNotificationCenter defaultCenter] removeObserver: self];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>MRC</code>时的写法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">- (void) dealloc</div><div class="line">&#123;</div><div class="line">    [super dealloc];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="属性修饰符"><a href="#属性修饰符" class="headerlink" title="属性修饰符"></a>属性修饰符</h3><p>1 属性是用于封装对象中的数据。<code>Objective-C</code>对象通常会把其所需要的数据保存为各种实例变量。使用点语法效果与直接调用存取方法相同</p>
+<p>2 <code>@dynamic</code>关键字告诉编译器不要自动创建属性所需要的实例变量，也不要为其创建存取方法。</p>
+<p>3 原子性：<code>nonatomic</code>和<code>atomic</code>,前者不使用同步锁。后者是默认的，会降低性能。</p>
+<p>4 读写权限：<code>readwrite</code>拥有<code>setter</code>和<code>getter</code>方法。<code>readonly</code>只拥有<code>getter</code>方法。可以把某种属性对外公开为只读属性，然后在该类的实现块或<code>.m</code>文件中的接口部分实现。</p>
+<h4 id="内存管理语义："><a href="#内存管理语义：" class="headerlink" title="内存管理语义："></a>内存管理语义：</h4><ul>
+<li><code>assign</code>: 只会针对如 NSInteger, CGFloat纯量类型简单赋值</li>
+</ul>
+<ul>
+<li><code>strong</code>：定义了一种拥有关系，为这种属性设置新值时，先保留新值，并释放旧值，然后再将新值设置上去。</li>
+<li><code>weak</code>: 设值方法不保留新值，也不释放旧值。与<code>assign</code>类似。但是属性所指的对象遭到摧毁时，属性值也会清空。  </li>
+<li><code>unsafe_unretained</code>: 与<code>assign</code>相同，但适用于对象类型。当对象遭到摧毁时，属性值不会清空。</li>
+<li><code>copy</code>:与<code>strong</code>类似。但是设置方法不保留新值，而是<code>copy</code>.当属性类型为<code>NSString</code>，用来保护其封装性。</li>
+</ul>
+<h3 id="所有权修饰符和属性修饰符之间的关系"><a href="#所有权修饰符和属性修饰符之间的关系" class="headerlink" title="所有权修饰符和属性修饰符之间的关系"></a>所有权修饰符和属性修饰符之间的关系</h3><table>
+<thead>
+<tr>
+<th>属性修饰符</th>
+<th>所有权修饰符</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>assign</code></td>
+<td><code>__unsafe_unretained</code></td>
+</tr>
+<tr>
+<td><code>copy</code></td>
+<td><code>__strong</code>赋值的是被赋值的对象</td>
+</tr>
+<tr>
+<td><code>retain</code></td>
+<td><code>__strong</code></td>
+</tr>
+<tr>
+<td><code>strong</code></td>
+<td><code>__strong</code></td>
+</tr>
+<tr>
+<td><code>unsafe_unretained</code></td>
+<td><code>__unsafe_unretained</code></td>
+</tr>
+<tr>
+<td>weak</td>
+<td><code>__weak</code></td>
+</tr>
+</tbody>
+</table>
+<p>​    </p>
+<h3 id="MRC下对属性修饰符对应的setter过程"><a href="#MRC下对属性修饰符对应的setter过程" class="headerlink" title="MRC下对属性修饰符对应的setter过程"></a><code>MRC</code>下对属性修饰符对应的<code>setter</code>过程</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">self.property = newValue;</div><div class="line"></div><div class="line">//assign</div><div class="line">property = newValue;</div><div class="line"></div><div class="line">//retain</div><div class="line">if(property != newValue)&#123;</div><div class="line">[property release];</div><div class="line">property = [newValue retain];</div><div class="line">&#125;</div><div class="line"></div><div class="line">//copy</div><div class="line">if(property != newValue)&#123;</div><div class="line">[property release];</div><div class="line">property = [newValue copy];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><ul>
+<li><p><code>Objective-C</code>高级编程</p>
+</li>
+<li><p><code>Effective Objective-C</code> 2.0 : 编写高质量iOS与OS X代码的52个有效方法</p>
+</li>
+<li><p><code>Objective-C</code> 程序设计（第4版）</p>
+<p>​</p>
+</li>
+</ul>
+</div></article></div></section><footer><div class="paginator"><a href="/2016/03/22/网易iOS开发笔试记录/" class="prev">PREV</a><a href="/2016/03/01/hello/" class="next">NEXT</a></div><div class="copyright"><p>© 2015 - 2016 <a href="http://yoursite.com">John Doe</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-65933410-1",'auto');ga('send','pageview');</script></body></html>
