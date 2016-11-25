@@ -210,9 +210,9 @@
       <category term="生活记录" scheme="http://yoursite.com/categories/%E7%94%9F%E6%B4%BB%E8%AE%B0%E5%BD%95/"/>
     
     
-      <category term="实习" scheme="http://yoursite.com/tags/%E5%AE%9E%E4%B9%A0/"/>
-    
       <category term="iOS" scheme="http://yoursite.com/tags/iOS/"/>
+    
+      <category term="实习" scheme="http://yoursite.com/tags/%E5%AE%9E%E4%B9%A0/"/>
     
       <category term="网易" scheme="http://yoursite.com/tags/%E7%BD%91%E6%98%93/"/>
     
